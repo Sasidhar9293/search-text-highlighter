@@ -17,9 +17,11 @@ Step1 : Clone the repository git clone https://github.com/Sasidhar9293/search-te
 Step2 : Navigate the project directory search-text-highlighter
 
 In the project directory, you can run:
+
 Step3 : run the command  [npm install] - to install all the required npm packages
 
 On successful installation of node packages
+
 Step4 : run [npm start] - to start the application 
 
 
