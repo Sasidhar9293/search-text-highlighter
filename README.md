@@ -25,3 +25,5 @@ the document viewer will load the document included in the public folder paform.
 
 You can enter text in the text field to get the text highlighed in the document viewer
 
+Sample view ![image](https://github.com/Sasidhar9293/search-text-highlighter/assets/56109053/659570c5-a6da-4302-a1ca-2e8a1c984137)
+
