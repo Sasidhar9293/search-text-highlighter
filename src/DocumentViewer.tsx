@@ -14,6 +14,7 @@ export default function DocumentViewerComponent(props: any) {
             PSPDFKit.unload(container)
             instance = await PSPDFKit.load({
                 container,
+                licenseKey:'MtJxZT-6BeCwvlrBykO1mHNd7u7X5drE-F4KWaPu5DLz0NjxySqP7fFnT77X7wibZbFweflPQGgzB1kbU-e0ADVKRrL-maEAch0dIlx5ufN_dhZHRQ2xoJfYuizYC3eJb7oVefIUwnxFdY51cDRAo6j5295zs2w7amRYitRcZlgehrlkHcYybmtdiiiMB3aEFH5glz7nW3PiiTjX',
                 document: props.document,
                 baseUrl: `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`
             });
@@ -21,7 +22,7 @@ export default function DocumentViewerComponent(props: any) {
             // get all the pages
             const pageCount = 0;//await instance.getPageCount();
 
-            // get the text from the pdf
+            // get the entire text from the pdf
             let text: string = '';
             for (let i = 0; i < pageCount; i++) {
                 let lines = await instance.textLinesForPageIndex(i);
@@ -30,7 +31,7 @@ export default function DocumentViewerComponent(props: any) {
                 });
             }
 
-            // call the algorithm by passing the text  
+            // call the algorithm by passing the text of pdf
 
 
 
@@ -41,19 +42,21 @@ export default function DocumentViewerComponent(props: any) {
 
             //A sample how we can highlight the resulted key words in the 
             // Instead of props.searchKey we can send the algorithm results
+            if(props.searchKey){
+                const results = await instance.search(props.searchKey);
 
-            const results = await instance.search(props.searchKey);
-
-            // Annotate the search  results to highlight them
-            const annotations = results.map((result: any) => {
-                return new PSPDFKit.Annotations.HighlightAnnotation({
-                    pageIndex: result.pageIndex,
-                    rects: result.rectsOnPage,
-                    boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage)
+                // Annotate the search  results to highlight them
+                const annotations = results.map((result: any) => {
+                    return new PSPDFKit.Annotations.HighlightAnnotation({
+                        pageIndex: result.pageIndex,
+                        rects: result.rectsOnPage,
+                        boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage)
+                    });
                 });
-            });
+    
+                instance.create(annotations);
+            }
 
-            instance.create(annotations);
         })();
 
         return () => PSPDFKit && PSPDFKit.unload(container)
