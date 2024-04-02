@@ -14,7 +14,7 @@ export default function DocumentViewerComponent(props: any) {
             PSPDFKit.unload(container)
             instance = await PSPDFKit.load({
                 container,
-                licenseKey:'MtJxZT-6BeCwvlrBykO1mHNd7u7X5drE-F4KWaPu5DLz0NjxySqP7fFnT77X7wibZbFweflPQGgzB1kbU-e0ADVKRrL-maEAch0dIlx5ufN_dhZHRQ2xoJfYuizYC3eJb7oVefIUwnxFdY51cDRAo6j5295zs2w7amRYitRcZlgehrlkHcYybmtdiiiMB3aEFH5glz7nW3PiiTjX',
+                licenseKey: 'MtJxZT-6BeCwvlrBykO1mHNd7u7X5drE-F4KWaPu5DLz0NjxySqP7fFnT77X7wibZbFweflPQGgzB1kbU-e0ADVKRrL-maEAch0dIlx5ufN_dhZHRQ2xoJfYuizYC3eJb7oVefIUwnxFdY51cDRAo6j5295zs2w7amRYitRcZlgehrlkHcYybmtdiiiMB3aEFH5glz7nW3PiiTjX',
                 document: props.document,
                 baseUrl: `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`
             });
@@ -42,25 +42,28 @@ export default function DocumentViewerComponent(props: any) {
 
             //A sample how we can highlight the resulted key words in the 
             // Instead of props.searchKey we can send the algorithm results
-            if(props.searchKey){
+            if (props.searchKey) {
                 const results = await instance.search(props.searchKey);
 
                 // Annotate the search  results to highlight them
-                const annotations = results.map((result: any) => {
-                    return new PSPDFKit.Annotations.HighlightAnnotation({
-                        pageIndex: result.pageIndex,
-                        rects: result.rectsOnPage,
-                        boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage)
+                if (results) {
+                    const annotations = results.map((result: any) => {
+                        return new PSPDFKit.Annotations.HighlightAnnotation({
+                            pageIndex: result.pageIndex,
+                            rects: result.rectsOnPage,
+                            boundingBox: PSPDFKit.Geometry.Rect.union(result.rectsOnPage)
+                        });
                     });
-                });
-    
-                instance.create(annotations);
+
+                    instance.create(annotations);
+                }
+
             }
 
         })();
 
         return () => PSPDFKit && PSPDFKit.unload(container)
-    }, []);
+    }, [props.searchKey]);
 
 
     return <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />
